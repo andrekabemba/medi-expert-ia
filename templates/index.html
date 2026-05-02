@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MediExpert | Système Expert de Diagnostic</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -14,6 +14,7 @@
             background: radial-gradient(circle at center, #111827 0%, #000000 100%);
             color: #e5e7eb;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .title-font {
@@ -24,22 +25,19 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-        }
-
-        .neon-border {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-            border-color: rgba(59, 130, 246, 0.5);
+            border-radius: 0.75rem;
         }
 
         .symptom-card {
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             cursor: pointer;
         }
 
-        .symptom-card:hover {
-            transform: translateY(-5px);
-            background: rgba(59, 130, 246, 0.1);
+        @media (hover: hover) {
+            .symptom-card:hover {
+                transform: translateY(-3px);
+                background: rgba(59, 130, 246, 0.1);
+            }
         }
 
         .symptom-card.selected {
@@ -60,66 +58,68 @@
     </style>
 </head>
 <body class="p-2 md:p-4 flex flex-col items-center">
-    <div class="max-w-3xl w-full">
-        <!-- Header Compact -->
-        <header class="text-center mb-6">
-            <h1 class="text-2xl md:text-4xl font-bold title-font text-blue-500 mb-1 tracking-widest">
-                <i class="fas fa-microchip mr-2 text-xl md:text-3xl"></i>MEDI-EXPERT
+    <div class="w-full max-w-full sm:max-w-2xl md:max-w-3xl">
+        <!-- Header Compact & Responsive -->
+        <header class="text-center mb-4 md:mb-6">
+            <h1 class="text-xl sm:text-2xl md:text-4xl font-bold title-font text-blue-500 mb-1 tracking-widest">
+                <i class="fas fa-microchip mr-2 text-lg sm:text-xl md:text-3xl"></i>MEDI-EXPERT
             </h1>
-            <p class="text-gray-400 text-[10px] md:text-xs uppercase tracking-tighter">Diagnostic Médical Intelligent</p>
-            <div class="h-0.5 w-12 bg-blue-500 mx-auto mt-2 rounded-full"></div>
+            <p class="text-gray-400 text-[8px] sm:text-[10px] md:text-xs uppercase tracking-tighter">Diagnostic Médical Intelligent</p>
+            <div class="h-0.5 w-8 sm:w-12 bg-blue-500 mx-auto mt-1 sm:mt-2 rounded-full"></div>
         </header>
 
         <!-- Main Content -->
-        <div class="space-y-4">
-            <!-- Symptom Selection Section - Reduced -->
-            <section class="glass p-4 border border-gray-800">
-                <h2 class="text-sm font-bold mb-4 flex items-center justify-center text-gray-300 uppercase tracking-wider">
+        <div class="space-y-3 md:space-y-4">
+            <!-- Symptom Selection Section -->
+            <section class="glass p-3 sm:p-4 border border-gray-800">
+                <h2 class="text-[10px] sm:text-xs md:text-sm font-bold mb-3 sm:mb-4 flex items-center justify-center text-gray-300 uppercase tracking-wider">
                     <i class="fas fa-clipboard-check text-blue-500 mr-2"></i>
                     Symptômes observés
                 </h2>
                 
+                <!-- Responsive Grid: 2 cols mobile, 3 tablet, 4 desktop -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" id="symptom-container">
                     {% for symptom in symptoms %}
-                    <div class="symptom-card glass py-2 px-1 text-center border border-gray-800 hover:border-blue-500/50 rounded-md" 
+                    <div class="symptom-card glass py-2 px-1 text-center border border-gray-800 rounded-md select-none touch-manipulation" 
                          onclick="toggleSymptom(this, '{{ symptom }}')">
-                        <span class="text-[10px] md:text-xs font-medium">{{ symptom }}</span>
+                        <span class="text-[9px] sm:text-[10px] md:text-xs font-medium">{{ symptom }}</span>
                     </div>
                     {% endfor %}
                 </div>
 
-                <div class="mt-6 flex justify-center">
+                <div class="mt-5 sm:mt-6 flex justify-center">
                     <button onclick="runDiagnosis()" 
-                            class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full text-xs font-black transition-all transform hover:scale-105 pulse flex items-center shadow-lg shadow-blue-900/20">
+                            class="bg-blue-600 active:bg-blue-700 hover:bg-blue-500 text-white px-5 sm:px-8 py-2 rounded-full text-[10px] sm:text-xs font-black transition-all transform active:scale-95 pulse flex items-center shadow-lg shadow-blue-900/20">
                         <i class="fas fa-stethoscope mr-2"></i> ANALYSER
                     </button>
                 </div>
             </section>
 
-            <!-- Results Section - Reduced -->
-            <section id="results-section" class="hidden space-y-3">
-                <div class="flex items-center justify-center space-x-3 mb-2">
+            <!-- Results Section -->
+            <section id="results-section" class="hidden space-y-2 md:space-y-3">
+                <div class="flex items-center justify-center space-x-2 sm:space-x-3 mb-1 sm:mb-2">
                     <div class="h-[1px] bg-gray-800 flex-grow"></div>
-                    <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 flex items-center">
-                        Résultats d'Analyse
+                    <h2 class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 flex items-center">
+                        Rapport d'Analyse
                     </h2>
                     <div class="h-[1px] bg-gray-800 flex-grow"></div>
                 </div>
 
-                <div id="loading" class="hidden text-center py-4">
-                    <i class="fas fa-spinner fa-spin text-xl text-blue-500 mb-2"></i>
-                    <p class="text-[10px] text-gray-500 italic">Traitement des données...</p>
+                <div id="loading" class="hidden text-center py-3 sm:py-4">
+                    <i class="fas fa-spinner fa-spin text-lg sm:text-xl text-blue-500 mb-2"></i>
+                    <p class="text-[9px] sm:text-[10px] text-gray-500 italic">Analyse en cours...</p>
                 </div>
 
-                <div id="results-content" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-8">
+                <!-- Responsive Results Grid: 1 col mobile, 2 cols tablet/desktop -->
+                <div id="results-content" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 pb-6 md:pb-8">
                     <!-- Compact Cards will appear here -->
                 </div>
             </section>
         </div>
 
         <!-- Footer Mini -->
-        <footer class="mt-8 text-center text-gray-700 text-[8px] border-t border-gray-900 pt-4 max-w-xl mx-auto leading-tight">
-            <p>MEDI-EXPERT AI &copy; 2026. Simulation logique préliminaire. Ne remplace pas un médecin. En cas de gravité, veuillez vous rendre à un centre hospitqlier le plus proche.</p>
+        <footer class="mt-6 sm:mt-8 text-center text-gray-700 text-[7px] sm:text-[8px] border-t border-gray-900 pt-3 sm:pt-4 px-4 leading-tight">
+            <p>MEDI-EXPERT AI &copy; 2026. Simulation logicielle préliminaire. Ne remplace pas un professionnel de santé. En cas de gravité, rendez-vous au centre hospitalier le plus proche.</p>
         </footer>
     </div>
 
@@ -195,7 +195,7 @@
 
                                 <div class="mt-auto pt-2 border-t border-gray-800/50">
                                     <p class="text-[9px] text-blue-400 leading-tight">
-                                        <span class="font-bold">Conseil:</span> ${disease.advice}
+                                        <span class="font-bold text-blue-300">Conseil:</span> ${disease.advice}
                                     </p>
                                 </div>
                             </div>
